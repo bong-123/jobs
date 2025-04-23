@@ -59,21 +59,7 @@ const CompaniesByCategory = () => {
       });
   }, [selectedCategory]);
 
-  // Status badge color logic
-  const getStatusStyles = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "applied":
-        return "bg-teal-100 text-teal-800";
-      case "interview":
-        return "bg-green-100 text-green-800";
-      case "offer":
-        return "bg-coral-100 text-coral-800";
-      case "rejected":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+ 
 
   return (
     <div className="min-h-screen bg-gray-50 font-poppins text-gray-800">
@@ -81,7 +67,7 @@ const CompaniesByCategory = () => {
   <header className="w-full bg-white shadow p-4 flex justify-between items-center fixed top-0 left-0 z-50">
     <h2 className="text-xl font-bold text-gray-800">Job Application Tracker</h2>
     <nav className="flex gap-4">
-      <a href="/" className="text-gray-600 font-semibold hover:text-red-800">Home</a>
+    <Link href="/" className="text-gray-600 font-semibold hover:text-red-800">Home</Link>
       <a href="/job" className="text-gray-600 font-semibold hover:text-red-800">Jobs</a>
       <a href="#" className="text-gray-600 font-semibold hover:text-red-800">About Us</a>
       <a href="/login" className="text-gray-600 font-semibold hover:text-red-800">Log In</a>
