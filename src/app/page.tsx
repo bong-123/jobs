@@ -2,30 +2,16 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'; // Import Link from next/link
+import Header from '../components/header';
+import Footer from '../components/footer';
+// import Link from 'next/link'; 
 
 const HomePage = () => {
   const router = useRouter();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-800 flex flex-col items-center justify-center p-4">
-      <header className="w-full bg-white shadow p-4 flex justify-between items-center fixed top-0">
-        <h2 className="text-xl font-bold text-gray-800">Job Application Tracker</h2>
-        <nav className="flex gap-4">
-          <Link href="/" className="text-gray-600 font-semibold hover:text-red-800">
-            Home
-          </Link>
-          <Link href="/job" className="text-gray-600 font-semibold hover:text-red-800">
-            Jobs
-          </Link>
-          <Link href="#" className="text-gray-600 font-semibold hover:text-red-800">
-            About Us
-          </Link>
-          <Link href="/login" className="text-gray-600 font-semibold hover:text-red-800">
-            Log In
-          </Link>
-        </nav>
-      </header>
+      <Header />
 
       <h1 className="text-4xl font-bold text-white mt-20 mb-6">Job Application Tracker</h1>
       <p className="text-lg text-gray-200 mb-8">Stay organized and track your job applications effortlessly.</p>
@@ -61,9 +47,7 @@ const HomePage = () => {
         Get Started
       </button>
 
-      <footer className="w-full bg-white shadow mt-8 p-4 text-center text-gray-600">
-        © 2025 Job Application Tracker. React System ProjectA.
-      </footer>
+      <Footer />
     </div>
   );
 };
