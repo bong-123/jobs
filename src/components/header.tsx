@@ -1,7 +1,5 @@
 'use client';
-
 import Link from 'next/link';
-
 const Header: React.FC = () => {
   return (
     <header className="w-full bg-white shadow p-4 flex justify-between items-center fixed top-0">
