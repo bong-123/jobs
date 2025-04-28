@@ -12,12 +12,19 @@ const HomePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-800 flex flex-col">
       <Header />
 
-      <main className="flex-grow flex flex-col items-center justify-center p-4">
-        <h1 className="text-4xl font-bold text-white mt-20 mb-6">Job Application Tracker</h1>
-        <p className="text-lg text-gray-200 mb-8">Stay organized and track your job applications effortlessly.</p>
+      {/* Notice: I added pt-24 to push content below the fixed header */}
+      <main className="flex-grow flex flex-col items-center justify-center p-4 pt-24">
+        <h1 className="text-4xl font-bold text-white mb-6 text-center">
+          Job Application Tracker
+        </h1>
+        <p className="text-lg text-gray-200 mb-8 text-center">
+          Stay organized and track your job applications effortlessly.
+        </p>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-4xl mb-8">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-2">About Job Application Tracker</h2>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+            About Job Application Tracker
+          </h2>
           <p className="text-gray-600">
             The Job Application Tracker helps you stay on top of your job hunt by keeping all your applications, interviews, and offers organized in one place. Say goodbye to messy spreadsheets and scattered notes — track your progress smoothly and efficiently.
           </p>
@@ -27,7 +34,6 @@ const HomePage = () => {
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-2">
             <h2 className="text-xl font-semibold text-gray-700 mb-2">Applied Jobs</h2>
             <p className="text-gray-500">Keep track of the jobs you&apos;ve applied to.</p>
-
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-2">
