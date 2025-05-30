@@ -1,16 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import axios, { AxiosError } from 'axios'; // Import AxiosError
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState, Suspense } from "react";
+import axios, { AxiosError } from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
+import Header from "@/components/header";
 
-const LoginPage = () => {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,69 +22,94 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage(null);
+
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login/', formData);
-      alert(res.data.message);
-      localStorage.setItem('access_token', res.data.access_token);
-      localStorage.setItem('refresh_token', res.data.refresh_token);
-      router.push('/');
+      const res = await axios.post("http://127.0.0.1:8000/api/login/", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Store user and tokens in localStorage
+      localStorage.setItem("authToken", res.data.access_token);
+      localStorage.setItem("refresh_token", res.data.refresh_token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      setMessage("Login successful! Redirecting...");
+      setTimeout(() => {
+        router.push(redirect);
+      }, 1500);
     } catch (err) {
-      // Specify AxiosError type with an optional response structure
       const error = err as AxiosError<{ error?: string }>;
-      alert(error.response?.data?.error || 'Login failed');
+      setMessage(error.response?.data?.error || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 to-pink-400">
-      <header className="w-full bg-white shadow p-4 flex justify-between items-center fixed top-0">
-        <h2 className="text-xl font-bold text-gray-800">Job Application Tracker</h2>
-        <nav className="flex gap-4">
-          <Link href="/" className="text-gray-600 font-semibold hover:text-red-800">
-            Home
-          </Link>
-          <Link href="/job" className="text-gray-600 font-semibold hover:text-red-800">
-            Jobs
-          </Link>
-          <Link href="#" className="text-gray-600 font-semibold hover:text-red-800">
-            About Us
-          </Link>
-          <Link href="#" className="text-gray-600 font-semibold hover:text-red-800">
-            Log In
-          </Link>
-        </nav>
-      </header>
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-black">
-        <h2 className="text-2xl text-block-600 font-bold mb-4 text-center">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-400"
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-400"
-          />
+    <div className="min-h-screen bg-gray-50 font-poppins text-gray-800 flex items-center justify-center">
+      <Header />
+      <div className="pt-24 max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-slate-800 mb-4 text-center">Log In</h2>
+        {message && (
+          <p
+            className={`mb-4 text-sm text-center ${
+              message.includes("successful") ? "text-teal-500" : "text-coral-500"
+            }`}
+          >
+            {message}
+          </p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              aria-required="true"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              aria-required="true"
+            />
+          </div>
           <button
             type="submit"
-            className="w-full bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 transition"
+            disabled={loading}
+            className={`w-full bg-teal-500 text-white p-2 rounded-lg shadow-md transition-colors ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-teal-600"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
-        <p className="text-center mt-3 text-sm">
-          Don&apos;t have an account?{' '}
+        <p className="text-center mt-4 text-sm text-gray-600">
+          Don&apos;t have an account?{" "}
           <span
-            onClick={() => router.push('/registration')}
-            className="text-purple-600 cursor-pointer"
+            onClick={() => router.push("/registration")}
+            className="text-teal-500 cursor-pointer hover:underline"
           >
             Register
           </span>
@@ -88,6 +117,12 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
+}
 
-export default LoginPage;
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
+  );
+}
